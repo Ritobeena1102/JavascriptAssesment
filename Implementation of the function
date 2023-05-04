@@ -1,0 +1,38 @@
+function sumByDay(inputDict) {
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const outputDict = {};
+  
+  // Initialize output dictionary with zeros for all days
+  for (const day of daysOfWeek) {
+    outputDict[day] = 0;
+  }
+  
+  // Loop over input dictionary and sum values by day
+  for (const key of Object.keys(inputDict)) {
+    const date = new Date(key);
+    const dayOfWeek = daysOfWeek[date.getDay()];
+    const value = inputDict[key];
+    outputDict[dayOfWeek] += value;
+  }
+  
+  // Handle missing days by averaging values of previous and next days
+  const missingDays = [];
+  for (let i = 1; i < daysOfWeek.length - 1; i++) {
+    const day = daysOfWeek[i];
+    if (!(day in outputDict)) {
+      missingDays.push(day);
+    }
+  }
+  for (const day of missingDays) {
+    const prevDayIndex = daysOfWeek.indexOf(day) - 1;
+    const nextDayIndex = daysOfWeek.indexOf(day) + 1;
+    const prevDay = daysOfWeek[prevDayIndex];
+    const nextDay = daysOfWeek[nextDayIndex];
+    const prevValue = outputDict[prevDay];
+    const nextValue = outputDict[nextDay];
+    const avgValue = Math.round((prevValue + nextValue) / 2);
+    outputDict[day] = avgValue;
+  }
+  
+  return outputDict;
+}
